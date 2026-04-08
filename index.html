@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#f7f2e7" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Habit Tracker" />
+    <title>Habit Tracker Plus</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="tracker-shell" aria-label="Habit tracker">
+        <header class="hero hero-simple">
+          <div>
+            <p class="eyebrow">Daily Rhythm</p>
+            <h1>Habit Tracker Plus</h1>
+            <p class="hero-copy">
+              Track daily goals, compare bedtime against a monthly target, and review progress across the full year.
+            </p>
+          </div>
+        </header>
+
+        <div class="mobile-view-switch">
+          <label class="field mobile-view-field">
+            <span>View</span>
+            <select id="mobile-tab-select" aria-label="Select view">
+              <option value="monthly">Monthly View</option>
+              <option value="yearly">Yearly Stats</option>
+              <option value="graphs">Graphs</option>
+            </select>
+          </label>
+        </div>
+
+        <nav class="tab-bar" aria-label="Views">
+          <button class="tab-button is-active" type="button" data-tab="monthly">Monthly View</button>
+          <button class="tab-button" type="button" data-tab="yearly">Yearly Stats</button>
+          <button class="tab-button" type="button" data-tab="graphs">Graphs</button>
+        </nav>
+
+        <section class="panel is-active" data-panel="monthly">
+          <div class="toolbar">
+            <label class="field">
+              <span>Month</span>
+              <select id="month-select" aria-label="Select month"></select>
+            </label>
+
+            <label class="field">
+              <span>Year</span>
+              <select id="year-select" aria-label="Select year"></select>
+            </label>
+
+            <label class="field field-wide">
+              <span>Study goal (hours)</span>
+              <input id="study-goal-input" type="number" min="0" step="0.25" inputmode="decimal" aria-label="Study goal in hours for month" />
+            </label>
+
+            <label class="field field-wide">
+              <span>Protein goal (grams)</span>
+              <input id="protein-goal-input" type="number" min="0" step="1" inputmode="numeric" aria-label="Protein goal in grams for month" />
+            </label>
+
+            <label class="field field-wide">
+              <span>Goal bedtime for month</span>
+              <input id="bedtime-goal-input" type="time" aria-label="Goal bedtime for month" />
+            </label>
+
+            <div class="month-overview">
+              <div class="overview-card">
+                <span class="overview-label">Days in month</span>
+                <strong id="days-in-month">0</strong>
+              </div>
+              <div class="overview-card">
+                <span class="overview-label">Days left in month</span>
+                <strong id="days-left-month">0</strong>
+              </div>
+              <div class="overview-card">
+                <span class="overview-label">Checked goals</span>
+                <strong id="month-checked">0</strong>
+              </div>
+              <div class="overview-card">
+                <span class="overview-label">Completion</span>
+                <strong id="month-percentage">0%</strong>
+              </div>
+              <div class="overview-card overview-card-compact">
+                <span class="overview-label">Passed days completion</span>
+                <strong id="passed-days-completion">0%</strong>
+                <span class="hero-card-meta">Progress across completed days only</span>
+              </div>
+            </div>
+          </div>
+
+          <section class="today-strip" aria-label="Today quick tracking">
+            <article class="today-card">
+              <div class="today-card-header">
+                <div>
+                  <p class="eyebrow">Today</p>
+                  <h2 id="today-date" class="today-date">Today</h2>
+                </div>
+                <div id="today-completion" class="today-badge">0/8 goals met</div>
+              </div>
+
+              <p id="today-context" class="today-context">Quick updates apply to today.</p>
+
+              <div class="today-row-grid">
+                <section class="today-mini" id="today-sports-card">
+                  <span class="today-label">Sports</span>
+                  <span class="today-goal-icon" aria-hidden="true">🏋️</span>
+                  <label class="checkbox-wrap today-check">
+                    <input class="habit-checkbox" type="checkbox" data-today-action="toggle" data-goal="Sports" id="today-sports-toggle" aria-label="Toggle Sports for today" />
+                  </label>
+                </section>
+
+                <section class="today-mini today-mini-compact" id="today-study-card">
+                  <span class="today-label">Study</span>
+                  <div class="today-inline-entry">
+                    <span class="today-icon" aria-hidden="true">🎓</span>
+                    <input class="metric-input today-metric-input" id="today-study-input" type="number" min="0" step="0.25" inputmode="decimal" aria-label="Study hours for today" />
+                  </div>
+                </section>
+
+                <section class="today-mini" id="today-supplements-card">
+                  <span class="today-label">Supplements</span>
+                  <span class="today-goal-icon" aria-hidden="true">💊</span>
+                  <label class="checkbox-wrap today-check">
+                    <input class="habit-checkbox" type="checkbox" data-today-action="toggle" data-goal="Supplements" id="today-supplements-toggle" aria-label="Toggle Supplements for today" />
+                  </label>
+                </section>
+
+                <section class="today-mini today-mini-compact" id="today-protein-card">
+                  <span class="today-label">Protein</span>
+                  <div class="today-inline-entry">
+                    <span class="today-icon" aria-hidden="true">🥚</span>
+                    <input class="metric-input today-metric-input" id="today-protein-input" type="number" min="0" step="10" inputmode="numeric" aria-label="Protein grams for today" />
+                  </div>
+                </section>
+
+                <section class="today-mini" id="today-friends-card">
+                  <span class="today-label">Friends</span>
+                  <span class="today-goal-icon" aria-hidden="true">🤝</span>
+                  <label class="checkbox-wrap today-check">
+                    <input class="habit-checkbox" type="checkbox" data-today-action="toggle" data-goal="Friends" id="today-friends-toggle" aria-label="Toggle Friends for today" />
+                  </label>
+                </section>
+
+                <section class="today-mini today-mini-compact" id="today-bedtime-card">
+                  <span class="today-label">Bedtime</span>
+                  <div class="today-inline-entry">
+                    <span class="today-icon" aria-hidden="true">🕒</span>
+                    <input class="bedtime-input today-bedtime-input" id="today-bedtime-input" type="time" aria-label="Bedtime for today" />
+                  </div>
+                </section>
+
+                <section class="today-mini" id="today-x-card">
+                  <span class="today-label">X</span>
+                  <span class="today-goal-icon" aria-hidden="true">✕</span>
+                  <label class="checkbox-wrap today-check">
+                    <input class="habit-checkbox" type="checkbox" data-today-action="toggle" data-goal="X" id="today-x-toggle" aria-label="Toggle X for today" />
+                  </label>
+                </section>
+
+                <section class="today-mini" id="today-read-card">
+                  <span class="today-label">Read</span>
+                  <span class="today-goal-icon" aria-hidden="true">📖</span>
+                  <label class="checkbox-wrap today-check">
+                    <input class="habit-checkbox" type="checkbox" data-today-action="toggle" data-goal="Read" id="today-read-toggle" aria-label="Toggle Read for today" />
+                  </label>
+                </section>
+              </div>
+            </article>
+
+            <aside class="streak-panel" aria-label="Streaks">
+              <div class="overview-card streak-card">
+                <span class="overview-label">Current streak</span>
+                <strong id="current-streak">0</strong>
+                <span class="hero-card-meta">Days with every goal met</span>
+              </div>
+              <div class="overview-card streak-card">
+                <span class="overview-label">Best streak</span>
+                <strong id="best-streak">0</strong>
+                <span class="hero-card-meta">Best all-goals run</span>
+              </div>
+              <div class="overview-card streak-card overview-card-compact">
+                <span class="overview-label">Year completion</span>
+                <strong id="hero-completion">0%</strong>
+                <span id="hero-total" class="hero-card-meta">0 of 0 goals met</span>
+                <span id="hero-days-left" class="hero-card-meta">0 days left in year</span>
+              </div>
+            </aside>
+          </section>
+
+          <div class="goal-notes">
+            <p id="study-note" class="goal-note">Study counts when the entered hours meet or exceed the monthly study goal.</p>
+            <p id="protein-note" class="goal-note">Protein counts when the entered grams meet or exceed the monthly protein goal.</p>
+            <p id="bedtime-note" class="goal-note">Bedtime only counts when the entered time is at or earlier than the monthly goal bedtime.</p>
+          </div>
+
+          <div class="table-wrap monthly-table-wrap">
+            <table class="tracker-table">
+              <thead id="monthly-head"></thead>
+              <tbody id="monthly-body"></tbody>
+              <tfoot id="monthly-foot"></tfoot>
+            </table>
+          </div>
+
+          <div id="monthly-cards" class="monthly-cards" aria-label="Monthly mobile cards"></div>
+        </section>
+
+        <section class="panel" data-panel="yearly">
+          <div class="toolbar yearly-toolbar">
+            <label class="field">
+              <span>Year</span>
+              <select id="yearly-year-select" aria-label="Select yearly statistics year"></select>
+            </label>
+
+            <div class="year-summary">
+              <div class="overview-card">
+                <span class="overview-label">Months tracked</span>
+                <strong id="tracked-months">0</strong>
+              </div>
+              <div class="overview-card">
+                <span class="overview-label">Goals met</span>
+                <strong id="yearly-total">0</strong>
+              </div>
+              <div class="overview-card overview-card-compact">
+                <span class="overview-label">Year completion</span>
+                <strong id="yearly-percentage">0%</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-wrap yearly-table-wrap">
+            <table class="yearly-table">
+              <thead id="yearly-head"></thead>
+              <tbody id="yearly-body"></tbody>
+            </table>
+          </div>
+
+          <div id="yearly-cards" class="yearly-cards" aria-label="Yearly mobile cards"></div>
+        </section>
+
+        <section class="panel" data-panel="graphs">
+          <div class="toolbar graph-toolbar">
+            <label class="field">
+              <span>Start</span>
+              <input id="graph-start-input" type="date" aria-label="Graph start date" />
+            </label>
+
+            <label class="field">
+              <span>End</span>
+              <input id="graph-end-input" type="date" aria-label="Graph end date" />
+            </label>
+
+            <label class="field field-wide">
+              <span>Metric</span>
+              <select id="graph-metric-select" aria-label="Select graph metric">
+                <option value="Sports">Sports</option>
+                <option value="Study">Study</option>
+                <option value="Supplements">Supplements</option>
+                <option value="Protein">Protein</option>
+                <option value="Friends">Friends</option>
+                <option value="X">X</option>
+                <option value="Read">Read</option>
+                <option value="Bedtime">Bedtime</option>
+                <option value="goals-met-absolute">Goals met (absolute)</option>
+                <option value="goals-met-percentage">Goals met (percentage)</option>
+              </select>
+            </label>
+          </div>
+
+          <section class="graph-panel-shell">
+            <div class="graph-meta">
+              <div class="overview-card overview-card-compact">
+                <span class="overview-label">Displayed period</span>
+                <strong id="graph-period-label">-</strong>
+              </div>
+              <div class="overview-card overview-card-compact">
+                <span class="overview-label">Metric</span>
+                <strong id="graph-selected-count">-</strong>
+              </div>
+            </div>
+            <div class="graph-wrap">
+              <canvas id="graph-canvas" width="1200" height="420" aria-label="Habit progress graph"></canvas>
+              <div id="graph-tooltip" class="graph-tooltip" hidden></div>
+            </div>
+            <p class="graph-note">Numeric goals use absolute values on the y-axis. Checkbox goals and percentage views use percent values.</p>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script src="./src/app.js"></script>
+  </body>
+</html>
