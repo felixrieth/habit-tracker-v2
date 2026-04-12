@@ -1,0 +1,500 @@
+(function () {
+  const GOALS = ["Sports", "Study", "Supplements", "Protein", "Friends", "X", "Read", "Bedtime"];
+  const TRACKED_GOALS = ["Sports", "Study", "Supplements", "Protein", "Friends", "X", "Read", "Bedtime"];
+  const MONTHS = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const STORAGE_KEY = "habit-tracker-plus-data-v2";
+  const SYNC_SETTINGS_KEY = "habit-tracker-plus-sync-v1";
+  const SYNC_ENDPOINT = "/api/sync";
+  const IMPORT_TAG = "excel-import-jan-feb-2026-v1";
+  const IMPORT_SEED = {
+  "dates": {
+    "2026-01-01": {
+      "Sports": true,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": true,
+      "studyHours": "1",
+      "proteinGrams": "150",
+      "bedtime": "23:30",
+      "notes": "No physical journal entry today, but first day using this habit tracker"
+    },
+    "2026-01-02": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": true,
+      "X": false,
+      "Read": true,
+      "studyHours": "1",
+      "proteinGrams": "150",
+      "bedtime": "03:13",
+      "notes": "Enttäuscht, weil ich Paula dieses Wochenende nicht sehen kann, aber erster Arbeitstag bei BDO"
+    },
+    "2026-01-03": {
+      "Sports": true,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": true,
+      "studyHours": "8.5",
+      "proteinGrams": "150",
+      "bedtime": "03:12",
+      "notes": "Heute war echt produktiv, nur das mit dem ins Bett gehen hat nicht so gut geklappt. Aber ich bin froh, dass ich zu mir gefunden habe. Ich bin glücklich egal was passiert."
+    },
+    "2026-01-04": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": true,
+      "X": false,
+      "Read": true,
+      "studyHours": "7",
+      "proteinGrams": "150",
+      "bedtime": "01:30",
+      "notes": "Produktiver Tag, früher ins Bett als die Nächte davor, aber letzten 2,5 Stunden wären besser im Bett gewesen, morgen geht’s früh raus"
+    },
+    "2026-01-05": {
+      "Sports": true,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": true,
+      "studyHours": "1.5",
+      "proteinGrams": "150",
+      "bedtime": "23:34",
+      "notes": ""
+    },
+    "2026-01-06": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": true,
+      "studyHours": "0.5",
+      "proteinGrams": "150",
+      "bedtime": "23:42",
+      "notes": "Morgen muss ich in der Bahn mehr lernen. Die Zeit ist sonst verschwendet"
+    },
+    "2026-01-07": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": false,
+      "studyHours": "1.5",
+      "proteinGrams": "150",
+      "bedtime": "01:42",
+      "notes": ""
+    },
+    "2026-01-08": {
+      "Sports": true,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": true,
+      "studyHours": "3",
+      "proteinGrams": "150",
+      "bedtime": "01:30",
+      "notes": "Ich rufe morgen Paula an, sie wird sich freuen"
+    },
+    "2026-01-09": {
+      "Sports": true,
+      "Supplements": true,
+      "Friends": true,
+      "X": false,
+      "Read": true,
+      "studyHours": "1.5",
+      "proteinGrams": "150",
+      "bedtime": "02:07",
+      "notes": "🚀 Einmal die Woche geht fit, der Trend geht nach oben! Paula anrufen!!! "
+    },
+    "2026-01-10": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": true,
+      "studyHours": "7.5",
+      "proteinGrams": "150",
+      "bedtime": "05:00",
+      "notes": "LETS GO "
+    },
+    "2026-01-11": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": true,
+      "studyHours": "6.5",
+      "proteinGrams": "150",
+      "bedtime": "23:20",
+      "notes": "Booyeah"
+    },
+    "2026-01-12": {
+      "Sports": true,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": true,
+      "studyHours": "1.5",
+      "proteinGrams": "150",
+      "bedtime": "23:40",
+      "notes": "Bra macht die AK, alle goals gehittet"
+    },
+    "2026-01-13": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": false,
+      "X": true,
+      "Read": true,
+      "studyHours": "2",
+      "proteinGrams": "150",
+      "bedtime": "23:30",
+      "notes": "Morgen geht’s nach Kassel Eywaaaa"
+    },
+    "2026-01-14": {
+      "Sports": false,
+      "Supplements": false,
+      "Friends": true,
+      "X": false,
+      "Read": false,
+      "studyHours": "2",
+      "proteinGrams": "150",
+      "bedtime": "00:30",
+      "notes": ""
+    },
+    "2026-01-15": {
+      "Sports": true,
+      "Supplements": true,
+      "Friends": true,
+      "X": false,
+      "Read": false,
+      "studyHours": "2",
+      "proteinGrams": "150",
+      "bedtime": "00:30",
+      "notes": ""
+    },
+    "2026-01-16": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": true,
+      "studyHours": "4",
+      "proteinGrams": "150",
+      "bedtime": "01:03",
+      "notes": "yurrr"
+    },
+    "2026-01-17": {
+      "Sports": true,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": true,
+      "studyHours": "9",
+      "proteinGrams": "150",
+      "bedtime": "00:30",
+      "notes": "gurrth"
+    },
+    "2026-01-18": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": true,
+      "X": false,
+      "Read": false,
+      "studyHours": "9",
+      "proteinGrams": "150",
+      "bedtime": "01:30",
+      "notes": "…"
+    },
+    "2026-01-19": {
+      "Sports": true,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": true,
+      "studyHours": "2",
+      "proteinGrams": "150",
+      "bedtime": "23:00",
+      "notes": "Im Him"
+    },
+    "2026-01-20": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": true,
+      "X": false,
+      "Read": true,
+      "studyHours": "2",
+      "proteinGrams": "150",
+      "bedtime": "01:20",
+      "notes": "Gute Nacht, schlafen geschickt"
+    },
+    "2026-01-21": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": false,
+      "X": false,
+      "Read": true,
+      "studyHours": "3.5",
+      "proteinGrams": "150",
+      "bedtime": "23:23",
+      "notes": "Gute Nacht, schlafen geschickt"
+    },
+    "2026-01-22": {
+      "Sports": true,
+      "Supplements": true,
+      "Friends": false,
+      "X": true,
+      "Read": true,
+      "studyHours": "4",
+      "proteinGrams": "150",
+      "bedtime": "23:30",
+      "notes": "YURRR"
+    },
+    "2026-01-23": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": true,
+      "X": false,
+      "Read": false,
+      "studyHours": "6",
+      "proteinGrams": "150",
+      "bedtime": "02:00",
+      "notes": "Not so yurr"
+    },
+    "2026-01-24": {
+      "Sports": true,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": true,
+      "studyHours": "7",
+      "proteinGrams": "150",
+      "bedtime": "02:00",
+      "notes": "Grr pow"
+    },
+    "2026-01-25": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": true,
+      "studyHours": "8",
+      "proteinGrams": "150",
+      "bedtime": "23:58",
+      "notes": "Grr powe"
+    },
+    "2026-01-26": {
+      "Sports": true,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": true,
+      "studyHours": "2.5",
+      "proteinGrams": "150",
+      "bedtime": "22:45",
+      "notes": "Hey hey hi miss american pie, take the pedal to the metal and i dont know why"
+    },
+    "2026-01-27": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": true,
+      "X": false,
+      "Read": true,
+      "studyHours": "5",
+      "proteinGrams": "150",
+      "bedtime": "00:30",
+      "notes": "Brt"
+    },
+    "2026-01-28": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": true,
+      "X": false,
+      "Read": true,
+      "studyHours": "4",
+      "proteinGrams": "150",
+      "bedtime": "00:50",
+      "notes": "Im himmmothy timothy jacksonnnn"
+    },
+    "2026-01-29": {
+      "Sports": true,
+      "Supplements": true,
+      "Friends": true,
+      "X": false,
+      "Read": true,
+      "studyHours": "3",
+      "proteinGrams": "150",
+      "bedtime": "01:30",
+      "notes": "gr pow"
+    },
+    "2026-01-30": {
+      "Sports": true,
+      "Supplements": true,
+      "Friends": false,
+      "X": true,
+      "Read": true,
+      "studyHours": "5",
+      "proteinGrams": "150",
+      "bedtime": "01:30",
+      "notes": "Schmeggedischmaggedischmogg"
+    },
+    "2026-01-31": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": false,
+      "X": true,
+      "Read": true,
+      "studyHours": "9",
+      "proteinGrams": "150",
+      "bedtime": "01:00",
+      "notes": "Ich mache einen 1,5 Bachelor an der Universität Mannheim"
+    },
+    "2026-02-01": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": true,
+      "studyHours": "12",
+      "proteinGrams": "150",
+      "bedtime": "00:30",
+      "notes": "This is how we do it. Ich mache einen 1,5 Bachelor"
+    },
+    "2026-02-02": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": false,
+      "studyHours": "13",
+      "proteinGrams": "150",
+      "bedtime": "23:58",
+      "notes": "Brttt"
+    },
+    "2026-02-03": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": true,
+      "X": false,
+      "Read": false,
+      "studyHours": "13",
+      "proteinGrams": "150",
+      "bedtime": "23:15",
+      "notes": "OH JAAAA"
+    },
+    "2026-02-04": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": true,
+      "studyHours": "12",
+      "proteinGrams": "150",
+      "bedtime": "02:30",
+      "notes": "BRA MACHT DIE AK"
+    },
+    "2026-02-05": {
+      "Sports": true,
+      "Supplements": true,
+      "Friends": true,
+      "X": false,
+      "Read": true,
+      "studyHours": "3.5",
+      "proteinGrams": "150",
+      "bedtime": "01:10",
+      "notes": "OH JAAAA"
+    },
+    "2026-02-06": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": false,
+      "studyHours": "1.5",
+      "proteinGrams": "150",
+      "bedtime": "02:00",
+      "notes": "BRAAA"
+    },
+    "2026-02-07": {
+      "Sports": true,
+      "Supplements": false,
+      "Friends": true,
+      "X": true,
+      "Read": false,
+      "studyHours": "1.5",
+      "proteinGrams": "150",
+      "bedtime": "02:00",
+      "notes": "Wir küssen uns am 14.02.2026"
+    },
+    "2026-02-08": {
+      "Sports": false,
+      "Supplements": false,
+      "Friends": true,
+      "X": true,
+      "Read": false,
+      "studyHours": "1.5",
+      "proteinGrams": "150",
+      "bedtime": "02:00",
+      "notes": "Paula und ich küssen uns am Valentinstag"
+    },
+    "2026-02-09": {
+      "Sports": true,
+      "Supplements": true,
+      "Friends": true,
+      "X": false,
+      "Read": false,
+      "studyHours": "1.5",
+      "proteinGrams": "150",
+      "bedtime": "23:40",
+      "notes": "Ich liebe mich"
+    },
+    "2026-02-10": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": true,
+      "X": false,
+      "Read": true,
+      "studyHours": "1.5",
+      "proteinGrams": "150",
+      "bedtime": "23:58",
+      "notes": "Ich bin der geilste, ich stehe morgen um 8 Uhr auf und fange direkt bis dennis mich anruft an zu lernen"
+    },
+    "2026-02-11": {
+      "Sports": true,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": true,
+      "studyHours": "1.5",
+      "proteinGrams": "150",
+      "bedtime": "01:00",
+      "notes": "Wir küssen uns am 14.02.2026"
+    },
+    "2026-02-12": {
+      "Sports": false,
+      "Supplements": true,
+      "Friends": true,
+      "X": true,
+      "Read": false,
+      "studyHours": "1.5",
+      "proteinGrams": "150",
+      "bedtime": "01:52",
+      "notes": "aef"
+    },
+    "2026-02-13": {
+      "Sports": true,
+      "Supplements": true,

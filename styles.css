@@ -239,6 +239,51 @@ h1 {
   margin-top: 6px;
 }
 
+.sync-strip {
+  margin: 0 0 18px;
+}
+
+.sync-card {
+  display: grid;
+  grid-template-columns: minmax(240px, 360px) auto 1fr;
+  gap: 12px;
+  align-items: end;
+  padding: 14px 16px;
+  border: 1.5px solid var(--line);
+  border-radius: 20px;
+  background: rgba(255, 253, 249, 0.86);
+}
+
+.sync-field {
+  min-width: 0;
+}
+
+.sync-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sync-button {
+  border: 0;
+  border-radius: 999px;
+  min-height: 44px;
+  padding: 10px 16px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+.sync-button-secondary {
+  background: rgba(46, 38, 28, 0.1);
+  color: var(--text);
+}
+
+.sync-status {
+  margin: 0;
+  color: var(--muted);
+}
+
 .table-wrap {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
@@ -727,7 +772,7 @@ h1 {
 }
 
 
-today-goal-icon {
+.today-goal-icon {
   display: inline-block;
   margin-top: 6px;
   font-size: 1rem;
@@ -989,6 +1034,19 @@ today-goal-icon {
   .field-wide {
     width: 100%;
     min-width: 0;
+  }
+
+  .sync-card {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .sync-actions {
+    width: 100%;
+  }
+
+  .sync-button {
+    flex: 1 1 0;
   }
 
   .field select,

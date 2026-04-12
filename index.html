@@ -40,6 +40,20 @@
           <button class="tab-button" type="button" data-tab="graphs">Graphs</button>
         </nav>
 
+        <section class="sync-strip" aria-label="Sync settings">
+          <div class="sync-card">
+            <label class="field field-wide sync-field">
+              <span>Sync code</span>
+              <input id="sync-code-input" type="password" autocomplete="off" spellcheck="false" placeholder="Use the same code on phone and laptop" aria-label="Sync code for shared data" />
+            </label>
+            <div class="sync-actions">
+              <button id="sync-connect-button" class="sync-button" type="button">Connect Sync</button>
+              <button id="sync-refresh-button" class="sync-button sync-button-secondary" type="button">Pull Latest</button>
+            </div>
+            <p id="sync-status" class="sync-status">Local-only mode. Add the same sync code on both devices to share data.</p>
+          </div>
+        </section>
+
         <section class="panel is-active" data-panel="monthly">
           <div class="toolbar">
             <label class="field">
@@ -291,6 +305,10 @@
       </section>
     </main>
 
-    <script src="./app.js"></script>
+    <script src="./src/app-part-00.js"></script>
+    <script src="./src/app-part-01.js"></script>
+    <script src="./src/app-part-02.js"></script>
+    <script src="./src/app-part-03.js"></script>
+    <script src="./src/app-part-04.js"></script>
   </body>
 </html>
