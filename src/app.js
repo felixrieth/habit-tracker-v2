@@ -726,7 +726,7 @@
     bedtimeGoalInput: document.querySelector("#bedtime-goal-input"),
     monthlyHead: document.querySelector("#monthly-head"),
     monthlyBody: document.querySelector("#monthly-body"),
-    monthlyFoot: document.querySelector("#monthy-foot"),
+    monthlyFoot: document.querySelector("#monthly-foot"),
     monthlyCards: document.querySelector("#monthly-cards"),
     yearlyHead: document.querySelector("#yearly-head"),
     yearlyBody: document.querySelector("#yearly-body"),
@@ -1105,7 +1105,7 @@
     elements.todayCompletion.textContent = `${todayGoalCount}/${TRACKED_GOALS.length} goals met`;
     elements.todayContext.textContent = viewingTodayMonth
       ? "Quick updates apply to today instantly."
-      : `Quick updates target today and switch the table back to ${MONTHS[monthIndex]} ${year}`;
+      : `Quick updates target today and switch the table back to ${MONTHS[monthIndex]} ${year}.`;
     elements.todayStudyInput.value = dayRecord.studyHours || "";
     elements.todayProteinInput.value = dayRecord.proteinGrams || "";
     elements.todayBedtimeInput.value = dayRecord.bedtime || defaultBedtime;
@@ -1550,8 +1550,8 @@
     for (let year = currentYear - 5; year <= currentYear + 5; year += 1) {
       years.add(year);
     }
-    Object.keys(state.data.dates).forEach((dateKey) => years.add(Number(dateKey.slice(0, 4)));
-    Object.keys(state.data.monthGoals).forEach((monthKey) => years.add(Number(monthKey.slice(0, 4)));
+    Object.keys(state.data.dates).forEach((dateKey) => years.add(Number(dateKey.slice(0, 4))));
+    Object.keys(state.data.monthGoals).forEach((monthKey) => years.add(Number(monthKey.slice(0, 4))));
     years.add(state.selectedYear);
     years.add(state.selectedYearlyYear);
     const sortedYears = Array.from(years).sort((left, right) => left - right);
@@ -1653,7 +1653,7 @@
       </tr>
       <tr>
         <th scope="row">Total Percentage</th>
-        ${TRACKED_GOALS.map((goal) => `<td class="stat-value">${formatPercent(stats.dayCount === 0 ? 0 : (stats.totalsByGoal[goal] / stats.dayCount) * 100)}</td>`)}
+        ${TRACKED_GOALS.map((goal) => `<td class="stat-value">${formatPercent(stats.dayCount === 0 ? 0 : (stats.totalsByGoal[goal] / stats.dayCount) * 100)}</td>`).join("")}
         <td class="stat-value">${formatPercent(stats.dayCount === 0 ? 0 : (stats.totalChecked / (stats.dayCount * TRACKED_GOALS.length)) * 100)}</td>
         <td class="footer-note">Full month</td>
       </tr>
@@ -1913,7 +1913,7 @@
   function switchTab(nextTab) {
     state.activeTab = nextTab;
     elements.tabButtons.forEach((button) => button.classList.toggle("is-active", button.dataset.tab === nextTab));
-    elements.panels.forEach((panel) => panel.classList.toggle("is-active", panel.dataset.panel === nextTab)));
+    elements.panels.forEach((panel) => panel.classList.toggle("is-active", panel.dataset.panel === nextTab));
     if (elements.mobileTabSelect) {
       elements.mobileTabSelect.value = nextTab;
     }
