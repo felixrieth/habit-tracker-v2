@@ -2,6 +2,11 @@ import { head, put } from "@vercel/blob";
 
 export const config = {
   runtime: "nodejs",
+  api: {
+    bodyParser: {
+      sizeLimit: "2mb",
+    },
+  },
 };
 
 const jsonHeaders = {
