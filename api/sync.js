@@ -23,14 +23,23 @@ function syncPath(syncId) {
   return `habit-sync/${syncId}.json`;
 }
 
+async function streamToText(stream) {
+  if (!stream) {
+    return "";
+  }
+
+  const response = new Response(stream);
+  return response.text();
+}
+
 async function readSyncRecord(syncId) {
   try {
     const blob = await get(syncPath(syncId), { access: "private" });
-    if (!blob || blob.statusCode === 404) {
+    if (!blob || blob.statusCode !== 200) {
       return null;
     }
 
-    const text = await blob.text();
+    const text = await streamToText(blob.stream);
     return JSON.parse(text);
   } catch {
     return null;
