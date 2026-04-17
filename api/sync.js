@@ -1,4 +1,4 @@
-import { head, put } from "@vercel/blob";
+import { get, put } from "@vercel/blob";
 
 export const config = {
   runtime: "nodejs",
@@ -19,14 +19,19 @@ function isValidId(value) {
   return typeof value === "string" && /^[a-f0-9]{64}$/.test(value);
 }
 
+function syncPath(syncId) {
+  return `habit-sync/${syncId}.json`;
+}
+
 async function readSyncRecord(syncId) {
   try {
-    const blob = await head(`habit-sync/${syncId}.json`);
-    const response = await fetch(blob.url, { cache: "no-store" });
-    if (!response.ok) {
+    const blob = await get(syncPath(syncId), { access: "private" });
+    if (!blob || blob.statusCode === 404) {
       return null;
     }
-    return await response.json();
+
+    const text = await blob.text();
+    return JSON.parse(text);
   } catch {
     return null;
   }
@@ -49,8 +54,8 @@ function parseBody(req) {
 }
 
 async function writeSyncRecord(syncId, record) {
-  return put(`habit-sync/${syncId}.json`, JSON.stringify(record), {
-    access: "public",
+  return put(syncPath(syncId), JSON.stringify(record), {
+    access: "private",
     addRandomSuffix: false,
     allowOverwrite: true,
     cacheControlMaxAge: 60,
