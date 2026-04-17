@@ -9,11 +9,6 @@ export const config = {
   },
 };
 
-const jsonHeaders = {
-  "Content-Type": "application/json",
-  "Cache-Control": "no-store",
-};
-
 function send(res, status, body) {
   res.status(status).setHeader("Content-Type", "application/json");
   res.setHeader("Cache-Control", "no-store");
@@ -32,12 +27,38 @@ async function readSyncRecord(syncId) {
       return null;
     }
     return await response.json();
-  } catch (error) {
+  } catch {
     return null;
   }
 }
 
-export default async function handler(req, res) {
+function parseBody(req) {
+  if (!req.body) {
+    return {};
+  }
+
+  if (typeof req.body === "string") {
+    try {
+      return JSON.parse(req.body);
+    } catch {
+      return {};
+    }
+  }
+
+  return req.body;
+}
+
+async function writeSyncRecord(syncId, record) {
+  return put(`habit-sync/${syncId}.json`, JSON.stringify(record), {
+    access: "public",
+    addRandomSuffix: false,
+    allowOverwrite: true,
+    cacheControlMaxAge: 60,
+    contentType: "application/json",
+  });
+}
+
+async function syncHandler(req, res) {
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
     return send(res, 503, {
       ok: false,
@@ -56,7 +77,7 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "POST") {
-    const { syncId, data, updatedAt } = req.body || {};
+    const { syncId, data, updatedAt } = parseBody(req);
     if (!isValidId(syncId)) {
       return send(res, 400, { ok: false, error: "Missing or invalid syncId." });
     }
@@ -80,16 +101,24 @@ export default async function handler(req, res) {
       data,
     };
 
-    await put(`habit-sync/${syncId}.json`, JSON.stringify(record), {
-      access: "public",
-      addRandomSuffix: false,
-      contentType: "application/json",
-      allowOverwrite: true,
-    });
+    await writeSyncRecord(syncId, record);
 
     return send(res, 200, { ok: true, record });
   }
 
   res.setHeader("Allow", "GET, POST");
   return send(res, 405, { ok: false, error: "Method not allowed." });
+}
+
+export default async function handler(req, res) {
+  try {
+    return await syncHandler(req, res);
+  } catch (error) {
+    console.error("[sync] request failed", error);
+    return send(res, 500, {
+      ok: false,
+      error: "Sync storage request failed.",
+      detail: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
 }
