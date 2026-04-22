@@ -3,6 +3,17 @@
   const EDIT_GRACE_MS = 6000;
   let lastLocalEditAt = 0;
 
+  function loadMobileFixes() {
+    if (document.querySelector('script[src="./src/mobile-fixes.js"]')) {
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "./src/mobile-fixes.js";
+    script.defer = true;
+    document.body.appendChild(script);
+  }
+
   function getSyncCode() {
     return document.querySelector("#sync-code-input")?.value.trim() || "";
   }
@@ -45,6 +56,8 @@
 
     document.querySelector("#sync-refresh-button")?.click();
   }
+
+  loadMobileFixes();
 
   document.addEventListener("input", markLocalEdit, true);
   document.addEventListener("change", markLocalEdit, true);
